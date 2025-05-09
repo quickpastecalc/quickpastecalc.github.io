@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Paste & Calculate | Online Calculator for On-the-Go Math</title>
-    <meta name="description" content="Need a quick math calculation on the go? Our online calculator lets you easily copy & paste expressions for instant results. Unlike most, we support quick input!">
-    <meta name="keywords" content="quick calculator, paste calculator, copy paste calculator, online calculator, on the go calculator, fast math calculator, expression calculator online, mobile calculator online">
+    <title>Quick Math: Live Online Calculator with Copy & Paste</title>
+    <meta name="description" content="Get instant math results as you type! Our quick online calculator supports easy copy & paste of expressions. Press Enter to save to history for on-the-go calculations.">
+    <meta name="keywords" content="live calculator, instant calculator, online calculator, copy paste calculator, quick math calculator, on the go calculator, real-time calculator, type and calculate, math expression calculator, calculator with history">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Akhil A S (akhilasdeveloper@gmail.com)">
     <link rel="canonical" href="quickpastecalc.github.io">
@@ -132,20 +132,27 @@
         const expressionInput = document.getElementById("expression");
         const resultDiv = document.getElementById("result");
         const historyList = document.getElementById("history");
+        const calculateButton = document.querySelector("button");
         let calculationHistory = [];
 
-        function calculate() {
-            let expression = expressionInput.value;
+        function calculate(expression) {
             expression = expression.replace(/,/g, '').trim();
-
             try {
-                const calculatedResult = eval(expression);
-                resultDiv.textContent = "Result: " + calculatedResult;
-                calculationHistory.push(`${expression} = ${calculatedResult}`);
-                updateHistoryDisplay();
+                return eval(expression);
             } catch (error) {
-                resultDiv.textContent = "Error: Invalid expression";
+                return "Error: Invalid expression";
             }
+        }
+
+        function updateResult() {
+            const expression = expressionInput.value;
+            const result = calculate(expression);
+            resultDiv.textContent = "Result: " + result;
+        }
+
+        function addToHistory(expression, result) {
+            calculationHistory.push(`${expression} = ${result}`);
+            updateHistoryDisplay();
         }
 
         function updateHistoryDisplay() {
@@ -157,11 +164,31 @@
             });
         }
 
-        expressionInput.addEventListener("keypress", function(event) {
+        function handleEnterPress(event) {
             if (event.key === "Enter") {
-                calculate();
+                const expression = expressionInput.value;
+                const result = calculate(expression);
+                if (result !== "Error: Invalid expression") {
+                    addToHistory(expression, result);
+                }
             }
-        });
+        }
+
+        function addToHistoryAndCalculate() {
+            const expression = expressionInput.value;
+            const result = calculate(expression);
+            if (result !== "Error: Invalid expression") {
+                addToHistory(expression, result);
+            }
+            updateResult();
+        }
+
+        expressionInput.addEventListener("input", updateResult);
+
+        expressionInput.addEventListener("keypress", handleEnterPress);
+
+        calculateButton.textContent = "Add to History";
+        calculateButton.onclick = addToHistoryAndCalculate;
     </script>
 </body>
 </html>
