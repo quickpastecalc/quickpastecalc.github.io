@@ -208,11 +208,12 @@
             historyList.innerHTML = "";
             if (calculationHistory.length > 0) {
                 historyContainer.style.display = 'block';
-                calculationHistory.forEach(item => {
+				for(var i=calculationHistory.length-1;i>=0;i--){
+					const item = calculationHistory[i];
                     const listItem = document.createElement("li");
                     listItem.textContent = item;
                     historyList.appendChild(listItem);
-                });
+				}
             } else {
                 historyContainer.style.display = 'none';
             }
