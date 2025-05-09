@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Paste & Calculate | Online Calculator for On-the-Go Math</title>
+    <meta name="description" content="Need a quick math calculation on the go? Our online calculator lets you easily copy & paste expressions for instant results. Unlike most, we support quick input!">
+    <meta name="keywords" content="quick calculator, paste calculator, copy paste calculator, online calculator, on the go calculator, fast math calculator, expression calculator online, mobile calculator online">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Akhil A S (akhilasdeveloper@gmail.com)">
+    <link rel="canonical" href="quickpastecalc.github.io">
+    <style>
+        body {
+            font-family: sans-serif;
+            color: #000;
+            background-color: #f8f8f8;
+            margin: 2em;
+            line-height: 1.5;
+        }
+        h1 {
+            color: #202122;
+            border-bottom: 1px solid #a2a9b1;
+            padding-bottom: 0.3em;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.3em;
+            font-size: 0.9em;
+        }
+        input[type="text"] {
+            padding: 0.6em;
+            border: 2px solid #0056b3;
+            border-radius: 3px;
+            width: 80%;
+            box-sizing: border-box;
+            margin-bottom: 1em;
+            font-size: 1em;
+        }
+        button {
+            padding: 0.4em 0.8em;
+            background-color: #f2f2f2;
+            border: 1px solid #a2a9b1;
+            color: #363c4e;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        button:hover {
+            background-color: #e0e0e0;
+        }
+        #result-container {
+            margin-top: 1em;
+        }
+        #result {
+            font-weight: bold;
+            margin-bottom: 0.3em;
+        }
+        #history {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 0.5em;
+        }
+        #history li {
+            font-weight: bold;
+            margin-bottom: 0.3em;
+            color: #555;
+        }
+        .operations {
+            margin-top: 1.5em;
+            padding: 0.8em;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            font-size: 0.85em;
+        }
+        .operations h2 {
+            color: #555;
+            margin-top: 0;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.2em;
+            font-size: 1em;
+            font-weight: normal;
+        }
+        .operation {
+            margin-bottom: 0.4em;
+        }
+        .symbol {
+            font-weight: bold;
+            color: #0056b3;
+        }
+        .note {
+            font-style: italic;
+            color: #777;
+            margin-top: 0.3em;
+            font-size: 0.8em;
+        }
+        a {
+            color: #0645ad;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quick Paste & Calculate Online</h1>
+
+    <p>Need to calculate a math expression quickly? Simply copy and paste it into our calculator for instant results. Perfect for on-the-go calculations!</p>
+
+    <label for="expression">Enter mathematical expression:</label>
+    <input type="text" id="expression" name="expression" placeholder="e.g., 2 + 3 * (4 - 1)">
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div id="result-container">
+        <div id="result"></div>
+        <ul id="history"></ul>
+    </div>
+
+    <div class="operations">
+        <h2>Available Math Operations</h2>
+        <p class="operation"><span class="symbol">+</span> : Addition (e.g., <code>2 + 3</code>)</p>
+        <p class="operation"><span class="symbol">-</span> : Subtraction (e.g., <code>5 - 1</code>)</p>
+        <p class="operation"><span class="symbol">*</span> : Multiplication (e.g., <code>4 * 6</code>)</p>
+        <p class="operation"><span class="symbol">/</span> : Division (e.g., <code>10 / 2</code>)</p>
+        <p class="operation"><span class="symbol">**</span> : Exponentiation (Power) (e.g., <code>2 ** 3</code> for $2^3$)</p>
+        <p>You can use parentheses <span class="symbol">()</span> to control the order of operations.</p>
+        <p class="note">Numbers in scientific E-notation (e.g., <code>1.2E3</code>) are also supported.</p>
+    </div>
+
+    <script>
+        const expressionInput = document.getElementById("expression");
+        const resultDiv = document.getElementById("result");
+        const historyList = document.getElementById("history");
+        let calculationHistory = [];
+
+        function calculate() {
+            let expression = expressionInput.value;
+            expression = expression.replace(/,/g, '').trim();
+
+            try {
+                const calculatedResult = eval(expression);
+                resultDiv.textContent = "Result: " + calculatedResult;
+                calculationHistory.push(`${expression} = ${calculatedResult}`);
+                updateHistoryDisplay();
+            } catch (error) {
+                resultDiv.textContent = "Error: Invalid expression";
+            }
+        }
+
+        function updateHistoryDisplay() {
+            historyList.innerHTML = "";
+            calculationHistory.forEach(item => {
+                const listItem = document.createElement("li");
+                listItem.textContent = item;
+                historyList.appendChild(listItem);
+            });
+        }
+
+        expressionInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                calculate();
+            }
+        });
+    </script>
+</body>
+</html>
