@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quick Math: Live Online Calculator with Copy & Paste</title>
-    <meta name="description" content="Get instant math results as you type! Our quick online calculator supports easy copy & paste of expressions. Press Enter to save to history for on-the-go calculations. History is saved locally!">
-    <meta name="keywords" content="live calculator, instant calculator, online calculator, copy paste calculator, quick math calculator, on the go calculator, real-time calculator, type and calculate, math expression calculator, calculator with history, saved history">    <meta name="robots" content="index, follow">
+    <meta name="description" content="Get instant math results as you type! Our quick online calculator supports easy copy & paste of expressions. Press Enter to save to history for on-the-go calculations. History is saved locally! Option to clear history.">
+    <meta name="keywords" content="live calculator, instant calculator, online calculator, copy paste calculator, quick math calculator, on the go calculator, real-time calculator, type and calculate, math expression calculator, calculator with history, saved history, clear history">
+    <meta name="robots" content="index, follow">
     <meta name="author" content="Akhil A S (akhilasdeveloper@gmail.com)">
-    <link rel="canonical" href="quickpastecalc.github.io">
+    <link rel="canonical" href="https://quickpastecalc.github.io/">
     <style>
         body {
             font-family: sans-serif;
@@ -54,15 +55,39 @@
             font-weight: bold;
             margin-bottom: 0.3em;
         }
+        #history-container {
+            margin-top: 1em;
+            padding: 0.5em;
+        }
+        #history h2 {
+            color: #202122;
+            font-size: 1.1em;
+            border-bottom: 1px solid #a2a9b1;
+            padding-bottom: 0.2em;
+            margin-bottom: 0.5em;
+        }
         #history {
             list-style-type: none;
             padding-left: 0;
-            margin-top: 0.5em;
+            margin-top: 0.3em;
         }
         #history li {
             font-weight: bold;
             margin-bottom: 0.3em;
             color: #555;
+        }
+        #clear-history {
+            padding: 0.3em 0.6em;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            color: #777;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-top: 0.5em;
+        }
+        #clear-history:hover {
+            background-color: #eee;
         }
         .operations {
             margin-top: 1.5em;
@@ -109,11 +134,15 @@
     <label for="expression">Enter mathematical expression:</label>
     <input type="text" id="expression" name="expression" placeholder="e.g., 2 + 3 * (4 - 1)">
 
-    <button onclick="calculate()">Calculate</button>
+    <button onclick="addToHistoryAndCalculate()">Add to History</button>
 
     <div id="result-container">
         <div id="result"></div>
-        <ul id="history"></ul>
+        <div id="history-container">
+            <h2>Calculation History</h2>
+            <ul id="history"></ul>
+            <button id="clear-history">Clear History</button>
+        </div>
     </div>
 
     <div class="operations">
@@ -130,7 +159,9 @@
     <script>
         const expressionInput = document.getElementById("expression");
         const resultDiv = document.getElementById("result");
+        const historyContainer = document.getElementById("history-container");
         const historyList = document.getElementById("history");
+        const clearHistoryButton = document.getElementById("clear-history");
         const calculateButton = document.querySelector("button");
         const STORAGE_KEY = 'calculatorHistory';
         let calculationHistory = loadHistory();
@@ -144,6 +175,12 @@
 
         function saveHistory() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(calculationHistory));
+        }
+
+        function clearHistory() {
+            calculationHistory = [];
+            localStorage.removeItem(STORAGE_KEY);
+            updateHistoryDisplay();
         }
 
         function calculate(expression) {
@@ -169,11 +206,16 @@
 
         function updateHistoryDisplay() {
             historyList.innerHTML = "";
-            calculationHistory.forEach(item => {
-                const listItem = document.createElement("li");
-                listItem.textContent = item;
-                historyList.appendChild(listItem);
-            });
+            if (calculationHistory.length > 0) {
+                historyContainer.style.display = 'block';
+                calculationHistory.forEach(item => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = item;
+                    historyList.appendChild(listItem);
+                });
+            } else {
+                historyContainer.style.display = 'none';
+            }
         }
 
         function handleEnterPress(event) {
@@ -196,16 +238,16 @@
         }
 
         expressionInput.addEventListener("input", updateResult);
-
         expressionInput.addEventListener("keypress", handleEnterPress);
-
         window.addEventListener('load', () => {
             calculationHistory = loadHistory();
             updateHistoryDisplay();
         });
+        clearHistoryButton.addEventListener("click", clearHistory);
 
         calculateButton.textContent = "Add to History";
         calculateButton.onclick = addToHistoryAndCalculate;
     </script>
+
 </body>
 </html>
