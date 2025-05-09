@@ -4,9 +4,8 @@
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quick Math: Live Online Calculator with Copy & Paste</title>
-    <meta name="description" content="Get instant math results as you type! Our quick online calculator supports easy copy & paste of expressions. Press Enter to save to history for on-the-go calculations.">
-    <meta name="keywords" content="live calculator, instant calculator, online calculator, copy paste calculator, quick math calculator, on the go calculator, real-time calculator, type and calculate, math expression calculator, calculator with history">
-    <meta name="robots" content="index, follow">
+    <meta name="description" content="Get instant math results as you type! Our quick online calculator supports easy copy & paste of expressions. Press Enter to save to history for on-the-go calculations. History is saved locally!">
+    <meta name="keywords" content="live calculator, instant calculator, online calculator, copy paste calculator, quick math calculator, on the go calculator, real-time calculator, type and calculate, math expression calculator, calculator with history, saved history">    <meta name="robots" content="index, follow">
     <meta name="author" content="Akhil A S (akhilasdeveloper@gmail.com)">
     <link rel="canonical" href="quickpastecalc.github.io">
     <style>
@@ -105,7 +104,7 @@
 <body>
     <h1>Quick Math: Live Online Calculator</h1>
 
-    <p>Experience instant math calculations as you type! This online calculator allows you to quickly copy and paste expressions. Press Enter to save your calculations to history for easy access on the go.</p>
+    <p>Experience instant math calculations as you type! This online calculator allows you to quickly copy and paste expressions. Press Enter to save your calculations to history for easy access on the go. Your history is saved locally in your browser.</p>
 
     <label for="expression">Enter mathematical expression:</label>
     <input type="text" id="expression" name="expression" placeholder="e.g., 2 + 3 * (4 - 1)">
@@ -133,7 +132,19 @@
         const resultDiv = document.getElementById("result");
         const historyList = document.getElementById("history");
         const calculateButton = document.querySelector("button");
-        let calculationHistory = [];
+        const STORAGE_KEY = 'calculatorHistory';
+        let calculationHistory = loadHistory();
+
+        updateHistoryDisplay();
+
+        function loadHistory() {
+            const storedHistory = localStorage.getItem(STORAGE_KEY);
+            return storedHistory ? JSON.parse(storedHistory) : [];
+        }
+
+        function saveHistory() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(calculationHistory));
+        }
 
         function calculate(expression) {
             expression = expression.replace(/,/g, '').trim();
@@ -153,6 +164,7 @@
         function addToHistory(expression, result) {
             calculationHistory.push(`${expression} = ${result}`);
             updateHistoryDisplay();
+            saveHistory();
         }
 
         function updateHistoryDisplay() {
@@ -186,6 +198,11 @@
         expressionInput.addEventListener("input", updateResult);
 
         expressionInput.addEventListener("keypress", handleEnterPress);
+
+        window.addEventListener('load', () => {
+            calculationHistory = loadHistory();
+            updateHistoryDisplay();
+        });
 
         calculateButton.textContent = "Add to History";
         calculateButton.onclick = addToHistoryAndCalculate;
